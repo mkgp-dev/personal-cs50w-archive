@@ -1,0 +1,74 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block title %}
+Profile: {{ username }}
+{% endblock %}
+
+{% block body %}
+    <main>
+    {% if not_found %}
+        <h2>User not found</h2>
+        <p class="m-0">The user you are looking for was not found.</p> 
+    {% else %}
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <h2>{{ username }}</h2>
+            </div>
+        {% if request.user.is_authenticated and request.user.username != username %}
+            <form action="{% url 'user_follow' username %}" method="post">
+                {% csrf_token %}
+            {% if bool_follow %}
+                <button type="submit" class="btn btn-outline-danger"><i class="fa-solid fa-user-xmark me-1"></i>Unfollow</button>
+            {% else %}
+                <button type="submit" class="btn btn-outline-primary"><i class="fa-solid fa-user-plus me-1"></i>Follow</button>
+            {% endif %}
+            </form>
+        {% endif %}
+        </div>
+        <h6 class="mb-4 d-flex align-items-center justify-content-start flex-wrap gap-3">
+            <span class="d-flex align-items-center">
+                <i class="fa-solid fa-users me-1"></i>{{ followers }} Followers
+            </span>
+            <span class="d-flex align-items-center">
+                <i class="fa-solid fa-user-group me-1"></i>{{ following }} Following
+            </span>
+        </h6>
+        <div id="post-container" class="mb-3">
+            <input id="query-url" value="{% url 'profile_list' username %}" hidden>
+            <input id="query-page" value="profile" hidden>
+            <input id="query-username" value="{{ default_user }}" hidden>
+            <ul id="post-list" class="list-group"></ul>
+        </div>
+
+        <!-- Pagination -->
+        <nav aria-label="Pagination">
+            <ul class="pagination justify-content-center"></ul>
+        </nav>
+
+        <!-- Disable for Pagination flexibility
+        <div class="post-container">
+            <ul class="list-group normal-fade-in">
+            {% for post in user_posts %}
+                <li class="list-group-item">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <p class="small text-muted m-0 mb-2">{{ post.date }}</p>
+                        <span class="badge bg-primary rounded-pill"><i class="fa-solid fa-heart me-1"></i>{{ post.likes }}</span>
+                    </div>
+                    <p class="m-0">{{ post.content }}</p>
+                </li>
+            {% empty %}
+                <p class="m-0">Nothing to see here.</p>
+            {% endfor %}
+            </ul>
+        </div>
+        -->
+
+    </main>
+    {% endif %}
+
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'network/default.js' %}"></script>
+{% endblock %}

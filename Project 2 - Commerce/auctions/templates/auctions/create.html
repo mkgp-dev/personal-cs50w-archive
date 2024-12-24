@@ -1,0 +1,57 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}
+Create a new auction
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col-6">
+            {% if message_error %}
+                <div class="alert alert-danger" role="alert">
+                    {{ message_error }}
+                </div>
+            {% elif message_success %}
+                <div class="alert alert-success" role="alert">
+                    {{ message_success }}
+                </div>
+            {% endif %}
+
+            <h2 class="text-center">Create a new auction</h2>
+
+            <form action="{% url 'create_auction' %}" method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title</label>
+                    <input type="text" class="form-control" id="title" name="title" required>
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                </div>
+                <div class="mb-3">
+                    <div class="row">
+                        <div class="col-2">
+                            <label for="bid" class="form-label">Starting bid</label>
+                            <input type="number" class="form-control" id="bid" name="bid" step="0.01" min="1" required>
+                        </div>
+                        <div class="col-3">
+                            <label for="category" class="form-label">Category (<i class="small">optional</i>)</label>
+                            <input type="text" class="form-control" id="category" name="category">
+                        </div>
+                        <div class="col-7">
+                            <label for="image" class="form-label">Image placeholder (<i class="small">optional</i>)</label>
+                            <input type="url" class="form-control" id="image" name="image">
+                        </div>
+                    </div>
+                </div>
+                <div class="d-grid gap-2">
+                    <button class="btn btn-primary" type="submit">Create</button>
+                </div>
+            </form>
+        </div>
+        <div class="col-3"></div>
+    </div>
+
+{% endblock %}

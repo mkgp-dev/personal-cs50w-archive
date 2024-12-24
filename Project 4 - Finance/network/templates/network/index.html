@@ -1,0 +1,50 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block body %}
+    <main>
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <h1>All Posts</h1>
+            </div>
+        {% if request.user.is_authenticated %}
+            <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#create-post"><i class="fa-solid fa-square-plus me-2"></i>Create new post</button>
+        {% endif %}
+        </div>
+        <div id="post-container" class="mb-3">
+            <input id="query-url" value="{% url 'post_list' %}" hidden>
+            <input id="query-page" value="index" hidden>
+            <input id="query-username" value="{{ default_user }}" hidden>
+            <ul id="post-list" class="list-group"></ul>
+        </div>
+
+        <!-- Pagination -->
+        <nav aria-label="Pagination">
+            <ul class="pagination justify-content-center"></ul>
+        </nav>
+    </main>
+
+    <!-- Modal -->
+    <div class="modal fade" id="create-post" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">Create new post</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="post-form">
+                        <div class="mb-3">
+                            <textarea id="post-content" class="form-control" name="content" rows="5" placeholder="Write your post here" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'network/default.js' %}"></script>
+{% endblock %}

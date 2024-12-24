@@ -1,0 +1,175 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}
+{{ item.title }}
+{% endblock %}
+
+{% block body %}
+
+{% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}" role="alert">
+        {{ message }}
+    </div>
+    {% endfor %}
+{% endif %}
+
+<div class="row">
+
+{% if not_found %}
+    <h1>Item not found</h1>
+    <p>The item you are looking for does not exist or may have been removed.</p>
+{% else %}
+    <div class="col-12 col-md-4 order-1 order-md-1">
+        <div class="card">
+    {% if item.image %}
+            <img src="{{ item.image }}" class="img-fluid rounded image-page-placeholder" alt="auction_image_display">
+    {% else %}
+            <img src="https://placehold.co/200" class="img-fluid rounded image-page-placeholder" alt="auction_image_display">
+    {% endif %}
+        </div>
+    </div>
+    <div class="col-12 col-md-8 order-2 order-md-2">
+        <div id="header" class="mb-2">
+            <h1 class="card-title">{{ item.title }}</h1>
+            <p>{{ item.description }}</p>
+        {% if item.active and request.user.is_authenticated %}
+            <div class="d-grid gap-2 d-md-block">
+                <form action="{% url 'item_page' item.id %}" method="post">
+                    {% csrf_token %}
+                {% if request.user == item.user %}
+                    <button type="submit" class="btn btn-sm btn-danger" name="action" value="close_auction" onclick="return confirm('Are you sure you want to close this auction?')">Close your auction</button>
+                {% endif %}
+
+                {% if watchlist_bool %}
+                    <button type="submit" class="btn btn-sm btn-danger" name="action" value="remove_watchlist">Remove to your Watchlist</button>
+                {% else %}
+                    <button type="submit" class="btn btn-sm btn-primary" name="action" value="add_watchlist">Add to your Watchlist</button>
+                {% endif %}
+                </form>
+            </div>
+        </div>
+        {% endif %}
+        <div class="card mb-3">
+            <div class="card-body">
+            {% if item.active %}
+                <div class="row">
+                    <div class="col-4">
+                        <small class="text-muted">Current price</small>
+                        <h1>${{ item.default_bid }}</h1>
+                    </div>
+                    <div class="col-8">
+                    {% if request.user.is_authenticated %}
+                        <form action="{% url 'item_page' item.id %}" method="post">
+                            {% csrf_token %}
+                            <input name="action" value="user_bid" hidden>
+                            <div class="mb-3">
+                                <label for="bid" class="form-label">Place your bid</label>
+                                <input type="number" class="form-control" id="bid" name="bid" step="0.01" min="1" required>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-primary" type="submit">Submit</button>
+                            </div>
+                        </form>
+                    {% else %}
+                        <div class="text-center">
+                            <h3 class="mt-1">This auction is ongoing</h3>
+                            <p>Login to start your bid.</p>
+                        </div>
+                    {% endif %}
+                    </div>
+                </div>
+            {% else %}
+                <div class="row">
+                    <div class="col-4">
+                        <small class="text-muted">Sold price</small>
+                        <h1>${{ item.default_bid }}</h1>
+                    </div>
+                    <div class="col-8">
+                        <div class="text-center">
+                            <h3 class="mt-1">This auction is ended</h3>
+                        {% if auction_winner == request.user %}
+                            <p class="text-success">You have won this item.</p>
+                        {% else %}
+                            <p>{{ auction_winner }} won this item.</p>
+                        {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            </div>
+        </div>
+    
+        <div class="row">
+            <div class="col-6">
+                <div class="card mb-3">
+                    <h5 class="card-header">Details</h5>
+                    <div class="card-body p-1">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><strong>Creator:</strong> {{ item.user }}</li>
+                        {% if item.category %}
+                            <li class="list-group-item"><strong>Category:</strong> {{ item.category }}</li>
+                        {% else %}
+                            <li class="list-group-item"><strong>Category:</strong> No category</li>
+                        {% endif %}
+                            <li class="list-group-item"><strong>Date created:</strong> {{ item.created }}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="card mb-3">
+                    <h5 class="card-header">Bids</h5>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Price</th>
+                                <th>User</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for bid in bids %}
+                            <tr>
+                                <td>${{ bid.amount }}</td>
+                                <td>{{ bid.user.username }}</td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="2" class="text-center">No bids at the moment.</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <h5 class="card-header">Comments</h5>
+        {% if request.user.is_authenticated %}
+            <form action="{% url 'item_page' item.id %}" class="p-2" method="post">
+                {% csrf_token %}
+                <input name="action" value="user_comment" hidden>
+                <input type="text" class="form-control mb-2" id="comment" name="comment" placeholder="Comment something in this item" required>
+                <button class="btn btn-primary float-start" type="submit">Send a comment</button>
+            </form>
+        {% endif %}
+            <ul class="list-group list-group-flush">
+            {% for comment in comments %}
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="ms-2 me-auto">
+                        <div class="fw-bold">{{ comment.user.username }}</div>
+                        {{ comment.comment }}
+                    </div>
+                </li>
+            {% empty %}
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    No comments at the moment.
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endif %}
+</div>
+
+{% endblock %}
