@@ -1,0 +1,33 @@
+body {
+    padding: 10px;
+}
+
+.image-list-placeholder {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+}
+
+.image-page-placeholder {
+    width: 620px;
+    height: 620px;
+    object-fit: cover;
+}
+
+.table {
+    margin-bottom: 0 !important;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+textarea {
+    resize: none;
+}

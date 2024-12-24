@@ -1,0 +1,16 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block body %}
+    {% if content_bool %}
+        {{ page_content|safe }}
+        <hr>
+        <a href="{% url 'wiki_edit' title=sub_title %}">Edit this page</a>
+    {% else %}
+        <h1>{{ title }}</h1>
+        <p>{{ title }} was not found.</p>
+    {% endif %}
+{% endblock %}

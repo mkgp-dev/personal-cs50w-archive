@@ -1,0 +1,32 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}
+Your watchlist
+{% endblock %}
+
+{% block body %}
+    <h2 class="mb-4">Your Watchlist</h2>
+
+    <div class="w-75">
+        <div class="list-group">
+        {% for auction in items %}
+            <a href="{% url 'item_page' auction.auction_list.id %}" class="list-group-item list-group-item-action p-0 d-flex overflow-hidden rounded mb-1">
+            {% if auction.auction_list.image %}
+                <img src="{{ auction.auction_list.image }}" class="img-fluid rounded-start image-list-placeholder" alt="auction_image_display">
+            {% else %}
+                <img src="https://placehold.co/200" class="img-fluid rounded-start image-list-placeholder" alt="auction_image_display">
+            {% endif %}
+                <div class="flex-grow-1 p-3">
+                    <h5 class="mb-1">{{ auction.auction_list.title }}</h5>
+                    <hr>
+                    <p class="mb-1"><strong>Current price</strong> is ${{ auction.auction_list.default_bid }}</p>
+                    <small class="text-muted">Created by {{ auction.auction_list.user.username }}</small>
+                </div>
+            </a>
+        {% empty %}
+            <p>You have no watchlist.</p>
+        {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}

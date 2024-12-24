@@ -1,0 +1,74 @@
+.normal-form {
+	max-width: 600px;
+}
+
+textarea {
+	resize: none;
+}
+
+.span-cursor {
+    cursor: pointer;
+}
+
+.span-liked {
+    color: red;
+}
+
+/* Animation */
+@keyframes in {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes out {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+@keyframes f-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes f-out {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+.message-slide {
+    animation: in 0.5s ease-out, fade-out 0.5s ease-in 2.5s;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.message-fade {
+    animation: out 0.5s ease-in;
+}
+
+.normal-fade-in {
+    animation: f-in 0.5s forwards;
+}
+
+.normal-fade-out {
+    animation: f-out 0.5s forwards;
+}
