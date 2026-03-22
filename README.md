@@ -1,5 +1,7 @@
 # Personal CS50W
 Archives of my journey in [CS50W](https://cs50.harvard.edu/web/) 2024
+
+> [!NOTE]
 > You can read, make a basis, or laugh at my code but strongly recommending you **not to copy** and learn the course properly.
 
 ## Video demonstration
